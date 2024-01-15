@@ -60,7 +60,7 @@ public class CustomerSearchServlet extends HttpServlet {
 				// 該当しない時のメッセージ
 				noCustomer = "検索結果はありません";
 			}
-			
+			// リクエストスコープに値をセット
 			request.setAttribute("customerSearch", customerSearch);
 			request.setAttribute("noCustomer", noCustomer);			
 			
