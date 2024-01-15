@@ -1,0 +1,22 @@
+.main {
+	text-align: center;
+	padding: 20px;
+}
+
+.main__imageBox {
+	padding-bottom: 40px;
+}
+
+.main__image {
+	margin: auto;
+	width: 150px;
+}
+
+.main__title {
+	margin-bottom: 20px;
+}
+
+.main__errorMessage {
+	color: #f00;
+	font-weight: bold;
+}

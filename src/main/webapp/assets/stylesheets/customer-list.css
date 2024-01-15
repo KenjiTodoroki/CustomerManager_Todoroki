@@ -1,0 +1,24 @@
+.main {
+	text-align: center;
+}
+
+.main__table {
+	margin: 0 auto;
+	border: 1px solid #000;
+}
+
+.main__tableRow {
+	border: 1px solid #000;
+}
+
+.main__tableHeader {
+	border: 1px solid #000;
+}
+
+.main__tableData {
+	border: 1px solid #000;
+}
+
+.main__toMenu {
+	margin-top: 10px;
+}

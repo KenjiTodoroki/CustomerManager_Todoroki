@@ -1,0 +1,25 @@
+.main {
+	text-align: center;
+}
+
+.main_errorMessage {
+	color: #f00;
+	font-weight: bold;
+}
+
+.main__table {
+	margin: 0 auto;
+	border: 1px solid #000;
+}
+
+.main__tableHeader {
+	border: 1px solid #000;
+}
+
+.main__tableData {
+	border: 1px solid #000;
+}
+
+.main__toList, .main__delete {
+	margin-top: 20px;
+}

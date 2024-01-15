@@ -1,0 +1,7 @@
+.main {
+	text-align: center;
+}
+
+.menu__button:not(:first-child) {
+	margin-top: 5px;
+}

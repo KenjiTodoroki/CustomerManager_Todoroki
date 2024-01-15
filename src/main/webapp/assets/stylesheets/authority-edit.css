@@ -1,0 +1,29 @@
+main {
+	text-align: center;
+}
+
+.main__errorMessage {
+	color: #f00;
+	font-weight: bold;
+}
+
+.main__table {
+	border: 1px solid #000;
+	margin: 0 auto;
+}
+
+.main__tableRow {
+	border: 1px solid #000;
+}
+
+.main__tableHeader {
+	border: 1px solid #000;
+}
+
+.main__tableData {
+	border: 1px solid #000;
+}
+
+.main__toMenu {
+	margin-top: 30px;
+}

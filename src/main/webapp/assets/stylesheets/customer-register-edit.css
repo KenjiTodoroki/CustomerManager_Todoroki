@@ -1,0 +1,12 @@
+.main {
+	text-align: center;
+}
+
+.main__errorMessage {
+	color: #f00;
+	font-weight: bold;
+}
+
+.main__toDetail {
+	margin-top: 30px;
+}
