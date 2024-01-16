@@ -35,6 +35,17 @@ public class CustomerDeleteServlet extends HttpServlet {
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
+		// リクエストのエンコーディング
+		request.setCharacterEncoding("UTF-8");
+		// 例外が発生したので詳細画面に戻る
+		String url = "customer-detail.jsp";
+		// エラーメッセージ
+		String errorMessage = "エラーが発生したため、削除に失敗しました。";
+		// エラーメッセージをセット
+		request.setAttribute("errorMessage", errorMessage);
+		// 転送
+		RequestDispatcher rd = request.getRequestDispatcher(url);
+		rd.forward(request, response);		
 	}
 
 	/**
@@ -44,24 +55,21 @@ public class CustomerDeleteServlet extends HttpServlet {
 			throws ServletException, IOException {
 		// リクエストのエンコーディング
 		request.setCharacterEncoding("UTF-8");
-		// 空のリストを作成
-		List<CustomerBean> customers = null;
-		List<AreaBean> areas = null;
 		// リクエストパラメーターの取得
 		String customerIdParam = request.getParameter("customerId");
 		String button = request.getParameter("button");
 		// String型からint型に変換
 		int customerId = Integer.parseInt(customerIdParam);
 		// 転送用パスを格納する変数
-		String url = "";
+		String url = null;
 		// DAOクラスjをインスタンス化
 		CustomerDAO customerDAO = new CustomerDAO();
 		AreaDAO areaDAO = new AreaDAO();
 		// 処理
 		try {
 			// DAOクラスのメソッドで取得した該当IDのデータをリストに加える
-			customers = customerDAO.getCustomerDetail(customerId);
-			areas = areaDAO.getAreaName(customerId);
+			List<CustomerBean> customers = customerDAO.getCustomerDetail(customerId);
+			List<AreaBean> areas = areaDAO.getAreaName(customerId);
 			// 上記リストをセット
 			request.setAttribute("customers", customers);
 			request.setAttribute("areas", areas);
@@ -84,14 +92,10 @@ public class CustomerDeleteServlet extends HttpServlet {
 			}
 			// 例外発生時
 		} catch (ClassNotFoundException | SQLException e) {
-			// エラーメッセージ
-			String errorMessage = "SQL操作時に例外が発生しました。";
 			// エラー履歴
 			e.printStackTrace();
-			// 例外が発生したので詳細画面に戻る
-			url = "customer-detail.jsp";
-			// エラーメッセージをセット
-			request.setAttribute("errorMessage", errorMessage);
+			// エラー処理をdoGetに移して画面表示の処理をする
+			doGet(request, response);
 		}
 		// 転送
 		RequestDispatcher rd = request.getRequestDispatcher(url);

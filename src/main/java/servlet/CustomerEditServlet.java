@@ -14,6 +14,7 @@ import javax.servlet.http.HttpServletResponse;
 import model.dao.AreaDAO;
 import model.dao.CustomerDAO;
 import model.entity.AreaBean;
+import model.entity.CustomerBean;
 
 /**
  * Servlet implementation class CustomerEditServlet
@@ -34,6 +35,26 @@ public class CustomerEditServlet extends HttpServlet {
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
+		// リクエストのエンコーディング
+		request.setCharacterEncoding("UTF-8");
+		// リクエストパラメーターの取得
+		String customerIdParam = request.getParameter("customerId");
+		// String型からint型に変換
+		int customerId = Integer.parseInt(customerIdParam);
+		// AreaDAOのインスタンス化
+		AreaDAO areaDAO = new AreaDAO();
+		// エラーメッセージ
+		String errorMessage = "編集に失敗しました。もう一度入力して下さい。";
+		// 同じページに戻る処理(エラーメッセージを表示)
+		try {
+			List<AreaBean> areas = areaDAO.getAllAreas();
+			// エラーメッセージと地区一覧、IDをセット
+			request.setAttribute("areas", areas);
+			request.setAttribute("customerId", customerId);
+			request.setAttribute("errorMessage", errorMessage);
+		} catch (RuntimeException | ClassNotFoundException | SQLException e) {
+			e.printStackTrace();
+		}
 	}
 
 	/**
@@ -43,8 +64,6 @@ public class CustomerEditServlet extends HttpServlet {
 			throws ServletException, IOException {
 		// リクエストのエンコーディング
 		request.setCharacterEncoding("UTF-8");
-		// 空のリストを作成(jspを介して地区名をブラウザに表示させるため)
-		List<AreaBean> areas = null;
 		// リクエストパラメーターの取得
 		String customerIdParam = request.getParameter("customerId");
 		String customerName = request.getParameter("customerName");
@@ -56,14 +75,15 @@ public class CustomerEditServlet extends HttpServlet {
 		// String型からint型に変換
 		int customerId = Integer.parseInt(customerIdParam);
 		// 転送用のパスを格納する変数
-		String url = null;
+		String url = "customer-edit.jsp";
 		// DAOのインスタンス化
 		CustomerDAO customerDAO = new CustomerDAO();
 		AreaDAO areaDAO = new AreaDAO();
 
 		try {
 			// 全ての項目が入力済みの場合
-			if (customerIdParam != null && customerName != null && customerNameKana != null && postCode != null && areaCode != null
+			if (customerIdParam != null && customerName != null && customerNameKana != null && postCode != null
+					&& areaCode != null
 					&& gender != null && phoneNumber != null) {
 				// customerDAOからeditCustomerメソッドを呼び出し、データベースを更新
 				customerDAO.editCustomer(customerId, customerName, customerNameKana, postCode, areaCode, gender,
@@ -72,33 +92,23 @@ public class CustomerEditServlet extends HttpServlet {
 				url = "customer-detail";
 				// それ以外
 			} else {
-				// 変数にエリア一覧を格納
-				areas = areaDAO.getAllAreas();
+				// リストにエリア一覧を格納
+				List<AreaBean> areas = areaDAO.getAllAreas();
+				// リストに顧客の各カラムを格納
+				List<CustomerBean> customers = customerDAO.getCustomerDetail(customerId);
 				// エリア一覧をセット
 				request.setAttribute("areas", areas);
 				// 一致するIDを参照する
 				request.setAttribute("customerId", customerId);
-				// 編集失敗なので同じページのURLを変数に格納
-				url = "customer-edit.jsp";
+				// リストをセット
+				request.setAttribute("customers", customers);
 			}
 			// 例外処理
 		} catch (ClassNotFoundException | SQLException e) {
-			// エラーメッセージ
-			String errorMessage = "顧客登録に失敗しました。もう一度入力して下さい。";
 			// エラー履歴
 			e.printStackTrace();
-			// 例外発生のため、編集ページを表示
-			url = "customer-edit.jsp";
-			// 同じページに戻る処理(エラーメッセージを表示)
-			try {
-				areas = areaDAO.getAllAreas();
-			} catch (RuntimeException | ClassNotFoundException | SQLException e1) {
-				e1.printStackTrace();
-			}
-			// エラーメッセージと地区一覧、IDをセット
-			request.setAttribute("areas", areas);
-			request.setAttribute("customerId", customerId);
-			request.setAttribute("errorMessage", errorMessage);
+			// エラー処理をdoGetに移して画面表示の処理をする
+			doGet(request, response);
 		}
 		// 転送
 		RequestDispatcher rd = request.getRequestDispatcher(url);

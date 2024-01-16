@@ -35,7 +35,25 @@ public class AuthorityEditServlet extends HttpServlet {
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
-		response.getWriter().append("Served at: ").append(request.getContextPath());
+		// リクエストのエンコーディング
+		request.setCharacterEncoding("UTF-8");
+		// DAOのインスタンス化
+		UserDAO userDAO = new UserDAO();
+		AuthorityDAO authorityDAO = new AuthorityDAO();
+		// エラーメッセージ
+		String errorMessage = "権限編集に失敗しました。";
+		// 同じページに戻る処理(エラーメッセージを表示)
+		try {
+			// 各DAOのメソッドを用いてリストに格納
+			List<UserBean> users = userDAO.getAllUsers();
+			List<AuthorityBean> authorities = authorityDAO.getAllAuthorities();
+			// エラーメッセージとユーザー、権限の一覧をセット
+			request.setAttribute("users", users);
+			request.setAttribute("authorities", authorities);
+			request.setAttribute("errorMessage", errorMessage);
+		} catch (RuntimeException | ClassNotFoundException | SQLException e) {
+			e.printStackTrace();
+		}
 	}
 
 	/**
@@ -45,14 +63,11 @@ public class AuthorityEditServlet extends HttpServlet {
 			throws ServletException, IOException {
 		// リクエストのエンコーディング
 		request.setCharacterEncoding("UTF-8");
-		// 空のリストを作成(jspを介してユーザー名と権限名をブラウザに表示させるため)
-		List<UserBean> users = null;
-		List<AuthorityBean> authorities = null;
 		// リクエストパラメーターの取得
 		String userId = request.getParameter("userId");
 		String authorityCode = request.getParameter("authorityCode");
 		// 転送用のパスを格納する変数
-		String url = null;
+		String url = "authority-edit.jsp";
 		// DAOのインスタンス化
 		UserDAO userDAO = new UserDAO();
 		AuthorityDAO authorityDAO = new AuthorityDAO();
@@ -66,34 +81,19 @@ public class AuthorityEditServlet extends HttpServlet {
 				url = "menu.jsp";
 				// それ以外
 			} else {
-				// 変数にユーザーと権限の一覧を格納
-				users = userDAO.getAllUsers();
-				authorities = authorityDAO.getAllAuthorities();
+				// リストにユーザーと権限の一覧を格納
+				List<UserBean> users = userDAO.getAllUsers();
+				List<AuthorityBean> authorities = authorityDAO.getAllAuthorities();
 				// ユーザーと権限の一覧をセット
 				request.setAttribute("users", users);
 				request.setAttribute("authorities", authorities);
-				// 編集失敗なので同じページのURLを変数に格納
-				url = "authority-edit.jsp";
 			}
 			// 例外処理
 		} catch (ClassNotFoundException | SQLException e) {
-			// エラーメッセージ
-			String errorMessage = "権限編集に失敗しました。";
 			// エラー履歴
 			e.printStackTrace();
-			// 例外発生のため、編集ページを表示
-			url = "authority-edit.jsp";
-			// 同じページに戻る処理(エラーメッセージを表示)
-			try {
-				users = userDAO.getAllUsers();
-				authorities = authorityDAO.getAllAuthorities();
-			} catch (RuntimeException | ClassNotFoundException | SQLException e1) {
-				e1.printStackTrace();
-			}
-			// エラーメッセージとユーザー、権限の一覧をセット
-			request.setAttribute("users", users);
-			request.setAttribute("authorities", authorities);
-			request.setAttribute("errorMessage", errorMessage);
+			// エラー処理をdoGetに移して画面表示の処理をする
+			doGet(request, response);
 		}
 		// 転送
 		RequestDispatcher rd = request.getRequestDispatcher(url);

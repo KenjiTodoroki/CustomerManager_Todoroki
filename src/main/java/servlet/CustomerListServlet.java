@@ -40,7 +40,7 @@ public class CustomerListServlet extends HttpServlet {
 		CustomerDAO dao = new CustomerDAO();
 		
 		try {
-			// daoのgetAllCustomerメソッドを実行してList型変数に格納
+			// daoのgetAllCustomerメソッドを実行してリストに格納
 			List<CustomerBean> customerList = dao.getAllCustomer();
 			// リクエストスコープに値をセット
 			request.setAttribute("customerList", customerList);
@@ -65,12 +65,12 @@ public class CustomerListServlet extends HttpServlet {
 		CustomerDAO dao = new CustomerDAO();
 		
 		try {
-			// daoのgetAllCustomerメソッドを実行してList型変数に格納
+			// daoのgetAllCustomerメソッドを実行してリストに格納
 			List<CustomerBean> customerList = dao.getAllCustomer();
 			// リクエストスコープに値をセット
 			request.setAttribute("customerList", customerList);
 		} catch (ClassNotFoundException | SQLException e) {
-			// 例外が発生した時に履歴を表示する
+			// エラー履歴
 			e.printStackTrace();
 		}
 		// 転送

@@ -37,15 +37,15 @@ public class MenuServlet extends HttpServlet {
 		// リクエストのエンコーディング
 		request.setCharacterEncoding("UTF-8");
 		// 空の転送用パスを格納する変数
-		String url = "";
+		String url = null;
 		// getParameterメソッドの引数にname属性の値を指定し、その値に対応したvalue属性の値を取得
 		String submit = request.getParameter("button");
-		// value属性の値が一致したページに遷移する
-		if (submit.equals("顧客一覧")) {
+		// value属性の値が一致したページに遷移する("文字列" + equals(String型変数)でnullの例外を回避)
+		if ("顧客一覧".equals(submit)) {
 			url = "customer-list";
-		} else if (submit.equals("顧客登録")) {
+		} else if ("顧客登録".equals(submit)) {
 			url = "customer-register";
-		} else if (submit.equals("権限編集")) {
+		} else if ("権限編集".equals(submit)) {
 			url = "authority-edit";
 		}
 		// 転送

@@ -33,18 +33,10 @@ public class LoginServlet extends HttpServlet {
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
-		//セッションの有無を確認(session変数にgetSessionメソッドを実行して、引数にfalseを入れてnullを返すようにしておく)
-		HttpSession session = request.getSession(false);
-		// 転送用パスを格納する変数
-		String url = "login.jsp";
-		//セッション有りの場合
-		if (session != null) {
-			//menu.jspに遷移
-			url = "menu.jsp";
-		}
-		// 転送
-		RequestDispatcher rd = request.getRequestDispatcher(url);
-		rd.forward(request, response);
+		// リクエストのエンコーディング
+		request.setCharacterEncoding("UTF-8");
+		// エラーメッセージを表示
+		request.setAttribute("errorMessage", "エラー発生したため、ログインに失敗しました。");
 	}
 
 	/**
@@ -58,7 +50,7 @@ public class LoginServlet extends HttpServlet {
 		String userId = request.getParameter("userId"); // ユーザID
 		String password = request.getParameter("password"); // パスワード
 		// 転送用パスを格納する変数
-		String url = null;
+		String url = "login.jsp";
 		// UserDAOクラスをインスタンス化
 		UserDAO dao = new UserDAO();
 		// try-catchで例外処理
@@ -78,22 +70,17 @@ public class LoginServlet extends HttpServlet {
 				HttpSession session = request.getSession();
 				session.setAttribute("user", user);
 				session.setAttribute("authorityCode", authorityCode);
-
 				// idとpasswordがデータベースに登録されていなかった場合
 			} else {
-				// ログイン画面のパス
-				url = "login.jsp";
 				// リクエストスコープに表示したい文字をセット
 				request.setAttribute("errorMessage", "ログインに失敗しました。もう一度入力して下さい。");
 			}
 		// 例外キャッチ
 		} catch (ClassNotFoundException | SQLException e) {
-			// ログイン画面のパス
-			url = "login.jsp";
-			// エラーメッセージを表示
-			request.setAttribute("errorMessage", "ログインに失敗しました。もう一度入力して下さい。");
 			// エラー履歴
 			e.printStackTrace();
+			// エラー処理をdoGetに移して画面表示の処理をする
+			doGet(request, response);
 		}
 		// 転送
 		RequestDispatcher rd = request.getRequestDispatcher(url);

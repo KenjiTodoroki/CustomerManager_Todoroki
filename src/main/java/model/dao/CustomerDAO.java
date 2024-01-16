@@ -45,7 +45,7 @@ public class CustomerDAO {
 	}
 
 	// 検索
-	public List<CustomerBean> SearchCustomer(String searchWord) throws ClassNotFoundException, SQLException {
+	public List<CustomerBean> searchCustomer(String searchWord) throws ClassNotFoundException, SQLException {
 		// 空のリストを作成
 		List<CustomerBean> customerList = new ArrayList<>();
 		// SQL文

@@ -1,6 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
-<%@ page import="java.util.List, model.entity.AreaBean"%>
+<%@ page import="java.util.List, model.entity.CustomerBean, model.entity.AreaBean"%>
 <!DOCTYPE html>
 <html>
 <head>
@@ -27,33 +27,36 @@
 				<p class="main__errorMessage">${errorMessage}</p>
 			</c:if>
 			<form action="customer-edit" method="post">
-				<label for="customerName">氏名</label>
-				<input type="text" name="customerName" id="customerName" placeholder="山田太郎" required>
-				<br>
-				<label for="customerNameKana">かな</label>
-				<input type="text" name="customerNameKana" id="customerNameKana" placeholder="やまだたろう" required>
-				<br>
-				<label for="postCode">郵便番号</label>
-				<input type="text" name="postCode" id="postCode" placeholder="8120037" required>
-				<br>
-				<label for="areaCode">地区</label> <select name="areaCode" id="areaCode" required>
-					<%-- 
-					c:forEach　（繰り返し）
-					<c:forEach var="コレクション・配列の各要素を表す変数名" items="コレクション・配列を参照する変数名" > 
-					--%>
-					<c:forEach var="area" items="${areas}">
-						<option value="${area.getAreaCode()}">${area.getAreaName()}</option>
-					</c:forEach>
-				</select>
-				<br>
-				<label>性別</label>
-				<input type="radio" name="gender" value="男" id="male">
-				<label for="male">男</label>
-				<input type="radio" name="gender" value="女" id="female">
-				<label for="female">女</label>
-				<br>
-				<label for="phoneNumber">電話番号</label>
-				<input type="text" name="phoneNumber" id="phoneNumber" placeholder="09011112222" required>
+				<c:forEach var="customer" items="${customers}">
+					<label for="customerName">氏名</label>
+					<input type="text" name="customerName" value="${customer.getCustomerName()}" id="customerName" placeholder="山田太郎" required>
+					<br>
+					<label for="customerNameKana">かな</label>
+					<input type="text" name="customerNameKana" value="${customer.getCustomerNameKana()}" id="customerNameKana" placeholder="やまだたろう" required>
+					<br>
+					<label for="postCode">郵便番号</label>
+					<input type="text" name="postCode" value="${customer.getPostCode()}" id="postCode" placeholder="8120037" required>
+					<br>
+					<label for="areaCode">地区</label>
+					<select name="areaCode" id="areaCode" required>
+						<%-- 
+						c:forEach　（繰り返し）
+						<c:forEach var="コレクション・配列の各要素を表す変数名" items="コレクション・配列を参照する変数名" > 
+						--%>
+						<c:forEach var="area" items="${areas}">
+							<option value="${area.getAreaCode()}">${area.getAreaName()}</option>
+						</c:forEach>
+					</select>
+					<br>
+					<label>性別</label>
+					<input type="radio" name="gender" value="男" id="male">
+					<label for="male">男</label>
+					<input type="radio" name="gender" value="女" id="female">
+					<label for="female">女</label>
+					<br>
+					<label for="phoneNumber">電話番号</label>
+					<input type="text" name="phoneNumber" value="${customer.getPhoneNumber()}" id="phoneNumber" placeholder="09011112222" required>
+				</c:forEach>
 				<br>
 				<!-- 編集ボタン -->
 				<input type="submit" name="button" value="編集確定">

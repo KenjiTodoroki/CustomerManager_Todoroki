@@ -34,7 +34,22 @@ public class CustomerRegisterServlet extends HttpServlet {
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
-		response.getWriter().append("Served at: ").append(request.getContextPath());
+		// リクエストのエンコーディング
+		request.setCharacterEncoding("UTF-8");
+		// AreaDAOクラスをインスタンス化
+		AreaDAO areaDAO = new AreaDAO();
+		// エラーメッセージ
+		String errorMessage = "エラーが発生したため、顧客登録に失敗しました。";
+		
+		try {
+			// getAllAreasを実行してリストに格納
+			List<AreaBean> areas = areaDAO.getAllAreas();
+			// エラーメッセージと地区一覧をセット
+			request.setAttribute("areas", areas);
+			request.setAttribute("errorMessage", errorMessage);
+		} catch (ClassNotFoundException | SQLException e) {
+			e.printStackTrace();
+		}
 	}
 
 	/**
@@ -44,8 +59,6 @@ public class CustomerRegisterServlet extends HttpServlet {
 			throws ServletException, IOException {
 		// リクエストのエンコーディング
 		request.setCharacterEncoding("UTF-8");
-		// 空のリストを作成(jspを介して地区名をブラウザに表示させるため)
-		List<AreaBean> areas = null;
 		// リクエストパラメーターの取得
 		String customerName = request.getParameter("customerName");
 		String customerNameKana = request.getParameter("customerNameKana");
@@ -55,7 +68,7 @@ public class CustomerRegisterServlet extends HttpServlet {
 		String birthday = request.getParameter("birthday");
 		String phoneNumber = request.getParameter("phoneNumber");
 		// 転送用パスを格納する変数
-		String url = null;
+		String url = "customer-register.jsp";
 		// 各DAOクラスをインスタンス化
 		CustomerDAO customerDAO = new CustomerDAO();
 		AreaDAO areaDAO = new AreaDAO();
@@ -64,37 +77,24 @@ public class CustomerRegisterServlet extends HttpServlet {
 			// 全ての項目が入力済みの場合
 			if (customerName != null && customerNameKana != null && postCode != null && areaCode != null
 					&& gender != null && birthday != null && phoneNumber != null) {
-
+				// registerCustomerを実行して各カラムに登録
 				customerDAO.registerCustomer(customerName, customerNameKana, postCode, areaCode, gender, birthday,
 						phoneNumber);
 				// 顧客一覧のページに遷移する為のURLを変数に格納
 				url = "customer-list";
 				// いずれか未入力の場合(最初にページが遷移した時も同様)
 			} else {
-				// 変数に地区一覧を格納
-				areas = areaDAO.getAllAreas();
+				// リストに地区一覧を格納
+				List<AreaBean> areas = areaDAO.getAllAreas();
 				// 地区一覧をセット
 				request.setAttribute("areas", areas);
-				// 登録失敗なので同じページのURLを変数に格納
-				url = "customer-register.jsp";
 			}
 			// 例外処理
 		} catch (ClassNotFoundException | SQLException e) {
-			// エラーメッセージ
-			String errorMessage = "顧客登録に失敗しました。もう一度入力して下さい。";
 			// エラー履歴
 			e.printStackTrace();
-			// 例外発生のため、登録ページを表示
-			url = "customer-register.jsp";
-			// 同じページに戻る処理(エラーメッセージを表示)
-			try {
-				areas = areaDAO.getAllAreas();
-			} catch (RuntimeException | ClassNotFoundException | SQLException e1) {
-				e1.printStackTrace();
-			}
-			// エラーメッセージと地区一覧をセット
-			request.setAttribute("areas", areas);
-			request.setAttribute("errorMessage", errorMessage);
+			// エラー処理をdoGetに移して画面表示の処理をする
+			doGet(request, response);
 		}
 		// 転送
 		RequestDispatcher rd = request.getRequestDispatcher(url);
