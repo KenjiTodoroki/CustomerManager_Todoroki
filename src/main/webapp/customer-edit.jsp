@@ -44,14 +44,37 @@
 						<c:forEach var="コレクション・配列の各要素を表す変数名" items="コレクション・配列を参照する変数名" > 
 						--%>
 						<c:forEach var="area" items="${areas}">
-							<option value="${area.getAreaCode()}">${area.getAreaName()}</option>
+							<c:choose>
+								<%-- 現在編集している顧客IDの編集前の地区を選択 --%>
+								<c:when test="${area.getAreaCode() == customer.getAreaCode()}">
+									<option value="${area.getAreaCode()}" selected>${area.getAreaName()}</option>
+								</c:when>
+								<%-- それ以外の地区を表示 --%>
+								<c:otherwise>
+									<option value="${area.getAreaCode()}">${area.getAreaName()}</option>
+								</c:otherwise>
+							</c:choose>
 						</c:forEach>
 					</select>
 					<br>
 					<label>性別</label>
-					<input type="radio" name="gender" value="男" id="male">
+					<c:choose>
+						<c:when test="${customer.getGender() == '男'}">
+							<input type="radio" name="gender" value="男" id="male" checked>
+						</c:when>
+						<c:otherwise>
+							<input type="radio" name="gender" value="男" id="male">
+						</c:otherwise>
+					</c:choose>
 					<label for="male">男</label>
-					<input type="radio" name="gender" value="女" id="female">
+					<c:choose>
+						<c:when test="${customer.getGender() == '女'}">
+							<input type="radio" name="gender" value="女" id="female" checked>
+						</c:when>
+						<c:otherwise>
+							<input type="radio" name="gender" value="女" id="female">
+						</c:otherwise>
+					</c:choose>
 					<label for="female">女</label>
 					<br>
 					<label for="phoneNumber">電話番号</label>

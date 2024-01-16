@@ -60,8 +60,8 @@
 							<c:forEach var="area" items="${areas}">
 								<td class="main__tableData">${area.getAreaName()}</td>
 							</c:forEach>
-							<td class="main__tableData">${customer.getBirthday()}</td>
 							<td class="main__tableData">${customer.getGender()}</td>
+							<td class="main__tableData">${customer.getBirthday()}</td>
 							<td class="main__tableData">${customer.getPhoneNumber()}</td>
 							<td class="main__tableData">${customer.getInsertDatetime()}</td>
 							<td class="main__tableData">${customer.getUpdateDatetime()}</td>

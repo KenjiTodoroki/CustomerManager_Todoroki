@@ -120,6 +120,7 @@ public class CustomerDAO {
 				+ "  customer_name,\n"
 				+ "  customer_name_kana,\n"
 				+ "  post_code,\n"
+				+ "  area_code,\n"
 				+ "  gender,\n"
 				+ "  birthday,\n"
 				+ "  phone_number,\n"
@@ -144,6 +145,7 @@ public class CustomerDAO {
 				customer.setCustomerName(res.getString("customer_name"));
 				customer.setCustomerNameKana(res.getString("customer_name_kana"));
 				customer.setPostCode(res.getString("post_code"));
+				customer.setAreaCode(res.getString("area_code"));
 				customer.setGender(res.getString("gender"));
 				customer.setBirthday(res.getString("birthday"));
 				customer.setPhoneNumber(res.getString("phone_number"));
