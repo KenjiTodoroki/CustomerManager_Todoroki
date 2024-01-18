@@ -89,7 +89,7 @@ public class CustomerEditServlet extends HttpServlet {
 				customerDAO.editCustomer(customerId, customerName, customerNameKana, postCode, areaCode, gender,
 						phoneNumber);
 				// 顧客一覧のページに遷移する為のURLを変数に格納
-				url = "customer-detail";
+				url = "customer-editLog";
 				// それ以外
 			} else {
 				// リストにエリア一覧を格納

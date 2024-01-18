@@ -203,4 +203,46 @@ public class CustomerDAO {
 			pstmt.executeUpdate();
 		}
 	}
+
+	// 編集前データ
+	public List<CustomerBean> getCustomerOldDetail() throws ClassNotFoundException, SQLException {
+		// 空のリスト作成
+		List<CustomerBean> customerOldDetail = new ArrayList<>();
+		// SQL文
+		String sql = "SELECT\n"
+				+ "  customer_id,\n"
+				+ "  customer_name,\n"
+				+ "  customer_name_kana,\n"
+				+ "  post_code,\n"
+				+ "  area_code,\n"
+				+ "  gender,\n"
+				+ "  phone_number\n"
+				+ "FROM\n"
+				+ "  m_customer_log\n"
+				+ "ORDER BY\n"
+				+ "  id DESC\n"
+				+ "LIMIT\n"
+				+ "  1;";
+		// データベース接続とプリペアドステートメントを取得
+		try (Connection con = ConnectionManager.getConnection();
+				PreparedStatement pstmt = con.prepareStatement(sql)) {
+			// SQL文の実行
+			ResultSet res = pstmt.executeQuery();
+			// SQL文が一致する所まで繰り返す
+			while (res.next()) {
+				// CustomerBeanをインスタンス化して各カラムを取得してセットする
+				CustomerBean customer = new CustomerBean();
+				customer.setCustomerId(res.getInt("customer_id"));
+				customer.setCustomerName(res.getString("customer_name"));
+				customer.setCustomerNameKana(res.getString("customer_name_kana"));
+				customer.setPostCode(res.getString("post_code"));
+				customer.setAreaCode(res.getString("area_code"));
+				customer.setGender(res.getString("gender"));
+				customer.setPhoneNumber(res.getString("phone_number"));
+				// リストに加える
+				customerOldDetail.add(customer);
+			}
+		}
+		return customerOldDetail;
+	}
 }

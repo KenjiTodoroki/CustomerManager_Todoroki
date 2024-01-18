@@ -66,4 +66,36 @@ public class AreaDAO {
 		}
 		return areaDetail;
 	}
+
+	// 編集前の地区名取得
+	public List<AreaBean> getOldAreaName() throws ClassNotFoundException, SQLException {
+		// 空のリスト作成
+		List<AreaBean> areaOldDetail = new ArrayList<>();
+		// SQL文を変数に格納
+		String sql = "SELECT\n"
+				+ "  area_name\n"
+				+ "FROM\n"
+				+ "  m_area a\n"
+				+ "  LEFT JOIN m_customer_log c ON a.area_code = c.area_code\n"
+				+ "ORDER BY\n"
+				+ "  id DESC\n"
+				+ "LIMIT\n"
+				+ "  1";
+		// データベース接続とプリペアドステートメントを取得
+		try (Connection con = ConnectionManager.getConnection();
+				PreparedStatement pstmt = con.prepareStatement(sql)) {
+			// SQL文の実行
+			ResultSet res = pstmt.executeQuery();
+			// SQL文が一致する所まで繰り返す
+			while (res.next()) {
+				// CustomerBeanをインスタンス化
+				AreaBean area = new AreaBean();
+				// 地区名のみ取得しセット
+				area.setAreaName(res.getString("area_name"));
+				// リストに加える
+				areaOldDetail.add(area);
+			}
+		}
+		return areaOldDetail;
+	}
 }
