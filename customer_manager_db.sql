@@ -74,19 +74,19 @@ CREATE TABLE m_customer_log (
 );
 
 /* 顧客履歴INSERTトリガー */
-CREATE TRIGGER m_customer_log_insert AFTER
-INSERT
-  ON m_customer FOR EACH ROW
-INSERT INTO
-  m_customer_log
-SET
-  customer_id = NEW.customer_id,
-  customer_name = NEW.customer_name,
-  customer_name_kana = NEW.customer_name_kana,
-  post_code = NEW.post_code,
-  area_code = NEW.area_code,
-  gender = NEW.gender,
-  phone_number = NEW.phone_number;
+-- CREATE TRIGGER m_customer_log_insert AFTER
+-- INSERT
+--   ON m_customer FOR EACH ROW
+-- INSERT INTO
+--   m_customer_log
+-- SET
+--   customer_id = NEW.customer_id,
+--   customer_name = NEW.customer_name,
+--   customer_name_kana = NEW.customer_name_kana,
+--   post_code = NEW.post_code,
+--   area_code = NEW.area_code,
+--   gender = NEW.gender,
+--   phone_number = NEW.phone_number;
 
 /* 顧客履歴UPDATEトリガー */
 CREATE TRIGGER m_customer_log_update BEFORE
