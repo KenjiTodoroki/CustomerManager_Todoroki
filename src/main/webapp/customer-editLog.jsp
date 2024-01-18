@@ -5,7 +5,7 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>編集確認</title>
+<title>編集結果</title>
 <link rel="stylesheet" href="assets/stylesheets/customer-detail-delete.css">
 </head>
 <body>
@@ -16,7 +16,7 @@
 	<c:import url="header.jsp" />
 	<main>
 		<div class="main">
-			<h1>編集確認</h1>
+			<h1>編集結果</h1>
 			<!-- <p class="main_errorMessage"></p> -->
 			<h2>編集前</h2>
 			<table class="main__table">

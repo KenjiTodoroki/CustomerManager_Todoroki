@@ -88,7 +88,7 @@ public class CustomerEditServlet extends HttpServlet {
 				// customerDAOからeditCustomerメソッドを呼び出し、データベースを更新
 				customerDAO.editCustomer(customerId, customerName, customerNameKana, postCode, areaCode, gender,
 						phoneNumber);
-				// 顧客一覧のページに遷移する為のURLを変数に格納
+				// 編集結果のページに遷移する為のURLを変数に格納
 				url = "customer-editLog";
 				// それ以外
 			} else {
